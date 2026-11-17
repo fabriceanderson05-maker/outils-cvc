@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Boîte à outils CVC - Dexforma</title>
+  <style>
+    :root {
+      --bg-primary: #0B1120;
+      --bg-card: #151E32;
+      --bg-input: #1E293B;
+      --border-color: #334155;
+      --accent: #EA580C;
+      --accent-hover: #F97316;
+      --accent-soft: rgba(234, 88, 12, 0.15);
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --green: #10B981;
+      --green-bg: rgba(16, 185, 129, 0.14);
+      --orange: #F59E0B;
+      --orange-bg: rgba(245, 158, 11, 0.14);
+      --red: #EF4444;
+      --red-bg: rgba(239, 68, 68, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.4;
+    }
+
+    header {
+      background-color: #090E1A;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-top {
+      max-width: 540px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #C2410C);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .brand-title h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-title span {
+      font-size: 11px;
+      color: var(--accent-hover);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--green);
+    }
+
+    .tabs-container {
+      max-width: 540px;
+      margin: 12px auto 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background-color: var(--bg-card);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 8px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background-color: var(--accent);
+      color: #fff;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tab-panel.active {
+      display: flex;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px 12px;
+    }
+
+    .input-row:focus-within {
+      border-color: var(--accent);
+    }
+
+    .input-row input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 20px;
+      font-weight: 700;
+      padding: 8px 0;
+      outline: none;
+    }
+
+    .unit-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-hover);
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      margin: 6px 0;
+      cursor: pointer;
+    }
+
+    .quick-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .step-btn {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 4px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .step-btn:active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .shape-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .shape-btn {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 9px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .shape-btn.active {
+      border-color: var(--accent);
+      background-color: var(--accent-soft);
+      color: var(--text-main);
+    }
+
+    select {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .rect-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .rect-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .result-box {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .result-box.comfort-green {
+      border-color: var(--green);
+      background-color: var(--green-bg);
+    }
+
+    .result-box.comfort-orange {
+      border-color: var(--orange);
+      background-color: var(--orange-bg);
+    }
+
+    .result-box.comfort-red {
+      border-color: var(--red);
+      background-color: var(--red-bg);
+    }
+
+    .result-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .result-value {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .result-sub {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .comfort-green .result-value, .comfort-green .result-sub { color: var(--green); }
+    .comfort-orange .result-value, .comfort-orange .result-sub { color: var(--orange); }
+    .comfort-red .result-value, .comfort-red .result-sub { color: var(--red); }
+
+    .gauge-bar {
+      width: 100%;
+      height: 8px;
+      background-color: var(--bg-input);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .gauge-fill {
+      height: 100%;
+      width: 25%;
+      background-color: var(--green);
+      transition: width 0.2s ease, background-color 0.2s ease;
+    }
+
+    .conv-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .conv-item {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px 12px;
+    }
+
+    .conv-item:focus-within {
+      border-color: var(--accent);
+    }
+
+    .conv-item input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 18px;
+      font-weight: 700;
+      padding: 8px 0;
+      outline: none;
+    }
+
+    footer {
+      max-width: 540px;
+      width: 100%;
+      margin: 4px auto 20px;
+      padding: 0 16px;
+    }
+
+    .dexforma-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .dexforma-banner p {
+      font-size: 12.5px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .dexforma-banner span {
+      display: block;
+      color: var(--accent-hover);
+      font-weight: 700;
+      margin-top: 3px;
+      font-size: 12px;
+    }
+
+    .banner-arrow {
+      background-color: var(--accent);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-logo">DX</div>
+        <div class="brand-title">
+          <h1>Boîte à outils CVC</h1>
+          <span>Dexforma Terrain</span>
+        </div>
+      </div>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        <span>100 % Hors-ligne</span>
+      </div>
+    </div>
+
+    <div class="tabs-container">
+      <button class="tab-btn active" data-tab="aeraulique">1. Aéraulique</button>
+      <button class="tab-btn" data-tab="convertisseur">2. Convertisseur</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ONGLET 1 : AERAULIQUE -->
+    <section id="tab-aeraulique" class="tab-panel active">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Débit d'air</span>
+        </div>
+        <div class="input-group">
+          <div class="input-row">
+            <input type="number" id="airflowInput" value="500" min="1" step="10" inputmode="decimal" />
+            <span class="unit-label">m³/h</span>
+          </div>
+          <input type="range" id="airflowSlider" min="50" max="10000" step="50" value="500" />
+          <div class="quick-steps">
+            <button class="step-btn" data-delta="-100">-100</button>
+            <button class="step-btn" data-delta="-50">-50</button>
+            <button class="step-btn" data-delta="50">+50</button>
+            <button class="step-btn" data-delta="100">+100</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Section de gaine</span>
+        </div>
+        <div class="shape-toggle">
+          <button class="shape-btn active" id="btnCirc">Circulaire (Ø)</button>
+          <button class="shape-btn" id="btnRect">Rectangulaire (L×H)</button>
+        </div>
+
+        <div id="circControls">
+          <select id="diamSelect">
+            <option value="80">Ø 80 mm</option>
+            <option value="100">Ø 100 mm</option>
+            <option value="125">Ø 125 mm</option>
+            <option value="160">Ø 160 mm</option>
+            <option value="200" selected>Ø 200 mm</option>
+            <option value="250">Ø 250 mm</option>
+            <option value="315">Ø 315 mm</option>
+            <option value="355">Ø 355 mm</option>
+            <option value="400">Ø 400 mm</option>
+            <option value="450">Ø 450 mm</option>
+            <option value="500">Ø 500 mm</option>
+            <option value="560">Ø 560 mm</option>
+            <option value="630">Ø 630 mm</option>
+            <option value="710">Ø 710 mm</option>
+            <option value="800">Ø 800 mm</option>
+            <option value="900">Ø 900 mm</option>
+            <option value="1000">Ø 1000 mm</option>
+          </select>
+        </div>
+
+        <div id="rectControls" style="display:none;">
+          <div class="rect-grid">
+            <div class="input-row">
+              <input type="number" id="rectW" value="300" min="50" step="10" inputmode="numeric" />
+              <span class="unit-label">mm (L)</span>
+            </div>
+            <div class="input-row">
+              <input type="number" id="rectH" value="200" min="50" step="10" inputmode="numeric" />
+              <span class="unit-label">mm (H)</span>
+            </div>
+          </div>
+          <div class="rect-hint" id="eqDiamHint">Diamètre équivalent aéraulique : 267 mm</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Résultats instantanés</span>
+        </div>
+        <div class="results-grid">
+          <div class="result-box comfort-orange" id="speedBox">
+            <span class="result-label">Vitesse d'air</span>
+            <span class="result-value" id="speedVal">4.42 m/s</span>
+            <span class="result-sub" id="speedStatus">Vigilance bruit (4 - 6.5 m/s)</span>
+          </div>
+          <div class="result-box">
+            <span class="result-label">Perte de charge</span>
+            <span class="result-value" id="pdVal">1.12 Pa/m</span>
+            <span class="result-sub" style="color:var(--text-muted);" id="dynPressVal">Pdyn : 11.7 Pa</span>
+          </div>
+        </div>
+        <div class="gauge-bar">
+          <div class="gauge-fill" id="speedGauge"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ONGLET 2 : CONVERTISSEUR -->
+    <section id="tab-convertisseur" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Débit d'air</span>
+          <button class="clear-btn" data-clear="flow">Effacer</button>
+        </div>
+        <div class="conv-list">
+          <div class="conv-item">
+            <input type="number" id="flow_m3h" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">m³/h</span>
+          </div>
+          <div class="conv-item">
+            <input type="number" id="flow_ls" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">l/s</span>
+          </div>
+          <div class="conv-item">
+            <input type="number" id="flow_cfm" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">CFM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Pression</span>
+          <button class="clear-btn" data-clear="press">Effacer</button>
+        </div>
+        <div class="conv-list">
+          <div class="conv-item">
+            <input type="number" id="press_pa" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">Pa</span>
+          </div>
+          <div class="conv-item">
+            <input type="number" id="press_dapa" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">daPa</span>
+          </div>
+          <div class="conv-item">
+            <input type="number" id="press_mmce" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">mmCE</span>
+          </div>
+          <div class="conv-item">
+            <input type="number" id="press_bar" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">bar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Puissance thermique</span>
+          <button class="clear-btn" data-clear="pow">Effacer</button>
+        </div>
+        <div class="conv-list">
+          <div class="conv-item">
+            <input type="number" id="pow_kw" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">kW</span>
+          </div>
+          <div class="conv-item">
+            <input type="number" id="pow_kcal" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">kcal/h</span>
+          </div>
+          <div class="conv-item">
+            <input type="number" id="pow_btu" placeholder="0" inputmode="decimal" />
+            <span class="unit-label">BTU/h</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="https://www.formation-dexforma.fr/accueil" target="_blank" rel="noopener" class="dexforma-banner">
+      <div>
+        <p>Maîtrisez le dimensionnement et l'équilibrage des réseaux</p>
+        <span>Découvrir nos formations CVC en ligne Dexforma →</span>
+      </div>
+      <div class="banner-arrow">↗</div>
+    </a>
+  </footer>
+
+  <script>
+    // Navigation par onglets
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Logique Aéraulique (Darcy-Weisbach / Swamee-Jain, air 20°C rho=1.204 kg/m3, rugosité acier galva 0.15 mm)
+    let isCirc = true;
+    const airflowInput = document.getElementById('airflowInput');
+    const airflowSlider = document.getElementById('airflowSlider');
+    const diamSelect = document.getElementById('diamSelect');
+    const rectW = document.getElementById('rectW');
+    const rectH = document.getElementById('rectH');
+
+    document.getElementById('btnCirc').addEventListener('click', () => {
+      isCirc = true;
+      document.getElementById('btnCirc').classList.add('active');
+      document.getElementById('btnRect').classList.remove('active');
+      document.getElementById('circControls').style.display = 'block';
+      document.getElementById('rectControls').style.display = 'none';
+      calcAir();
+    });
+
+    document.getElementById('btnRect').addEventListener('click', () => {
+      isCirc = false;
+      document.getElementById('btnRect').classList.add('active');
+      document.getElementById('btnCirc').classList.remove('active');
+      document.getElementById('rectControls').style.display = 'block';
+      document.getElementById('circControls').style.display = 'none';
+      calcAir();
+    });
+
+    document.querySelectorAll('.step-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const delta = parseFloat(btn.dataset.delta);
+        const current = parseFloat(airflowInput.value) || 0;
+        const next = Math.max(10, current + delta);
+        airflowInput.value = next;
+        airflowSlider.value = Math.min(10000, next);
+        calcAir();
+      });
+    });
+
+    airflowInput.addEventListener('input', () => {
+      airflowSlider.value = Math.min(10000, parseFloat(airflowInput.value) || 50);
+      calcAir();
+    });
+    airflowSlider.addEventListener('input', () => {
+      airflowInput.value = airflowSlider.value;
+      calcAir();
+    });
+    diamSelect.addEventListener('change', calcAir);
+    rectW.addEventListener('input', calcAir);
+    rectH.addEventListener('input', calcAir);
+
+    function calcAir() {
+      const q_m3h = Math.max(0, parseFloat(airflowInput.value) || 0);
+      const q_m3s = q_m3h / 3600;
+      let area = 0;
+      let d_hyd = 0;
+
+      if (isCirc) {
+        d_hyd = (parseFloat(diamSelect.value) || 200) / 1000;
+        area = Math.PI * Math.pow(d_hyd / 2, 2);
+      } else {
+        const a = Math.max(10, parseFloat(rectW.value) || 300) / 1000;
+        const b = Math.max(10, parseFloat(rectH.value) || 200) / 1000;
+        area = a * b;
+        const d_eq = 1.30 * Math.pow(a * b, 0.625) / Math.pow(a + b, 0.25);
+        d_hyd = d_eq;
+        document.getElementById('eqDiamHint').textContent =
+          `Diamètre équivalent aéraulique : ${Math.round(d_eq * 1000)} mm`;
+      }
+
+      const v = area > 0 ? q_m3s / area : 0;
+      const rho = 1.204;
+      const nu = 1.51e-5;
+      const eps = 0.00015;
+
+      const pdyn = 0.5 * rho * v * v;
+      let j_pam = 0;
+
+      if (v > 0 && d_hyd > 0) {
+        const re = (v * d_hyd) / nu;
+        let lambda = 0.02;
+        if (re > 2300) {
+          const term = (eps / (3.7 * d_hyd)) + (5.74 / Math.pow(re, 0.9));
+          lambda = 0.25 / Math.pow(Math.log10(term), 2);
+        } else if (re > 0) {
+          lambda = 64 / re;
+        }
+        j_pam = (lambda / d_hyd) * pdyn;
+      }
+
+      document.getElementById('speedVal').textContent = v.toFixed(2) + ' m/s';
+      document.getElementById('pdVal').textContent = j_pam.toFixed(2) + ' Pa/m';
+      document.getElementById('dynPressVal').textContent = 'Pdyn : ' + pdyn.toFixed(1) + ' Pa';
+
+      const speedBox = document.getElementById('speedBox');
+      const speedStatus = document.getElementById('speedStatus');
+      const speedGauge = document.getElementById('speedGauge');
+
+      speedBox.classList.remove('comfort-green', 'comfort-orange', 'comfort-red');
+      const pct = Math.min(100, (v / 10) * 100);
+      speedGauge.style.width = pct + '%';
+
+      if (v < 4.0) {
+        speedBox.classList.add('comfort-green');
+        speedStatus.textContent = 'Confort acoustique (< 4 m/s)';
+        speedGauge.style.backgroundColor = 'var(--green)';
+      } else if (v <= 6.5) {
+        speedBox.classList.add('comfort-orange');
+        speedStatus.textContent = 'Vigilance bruit (4 - 6.5 m/s)';
+        speedGauge.style.backgroundColor = 'var(--orange)';
+      } else {
+        speedBox.classList.add('comfort-red');
+        speedStatus.textContent = 'Vitesse excessive (> 6.5 m/s)';
+        speedGauge.style.backgroundColor = 'var(--red)';
+      }
+    }
+    calcAir();
+
+    // Logique Convertisseur CVC bidirectionnel
+    function fmt(val) {
+      if (!isFinite(val) || val === 0) return '';
+      return parseFloat(val.toPrecision(5)).toString();
+    }
+
+    const f_m3h = document.getElementById('flow_m3h');
+    const f_ls = document.getElementById('flow_ls');
+    const f_cfm = document.getElementById('flow_cfm');
+
+    f_m3h.addEventListener('input', () => {
+      const v = parseFloat(f_m3h.value);
+      if (isNaN(v)) { f_ls.value = ''; f_cfm.value = ''; return; }
+      f_ls.value = fmt(v / 3.6);
+      f_cfm.value = fmt(v * 0.588578);
+    });
+    f_ls.addEventListener('input', () => {
+      const v = parseFloat(f_ls.value);
+      if (isNaN(v)) { f_m3h.value = ''; f_cfm.value = ''; return; }
+      f_m3h.value = fmt(v * 3.6);
+      f_cfm.value = fmt(v * 2.11888);
+    });
+    f_cfm.addEventListener('input', () => {
+      const v = parseFloat(f_cfm.value);
+      if (isNaN(v)) { f_m3h.value = ''; f_ls.value = ''; return; }
+      const m3h = v / 0.588578;
+      f_m3h.value = fmt(m3h);
+      f_ls.value = fmt(m3h / 3.6);
+    });
+
+    const p_pa = document.getElementById('press_pa');
+    const p_dapa = document.getElementById('press_dapa');
+    const p_mmce = document.getElementById('press_mmce');
+    const p_bar = document.getElementById('press_bar');
+
+    function updatePressFromPa(pa) {
+      if (isNaN(pa)) {
+        p_pa.value = p_dapa.value = p_mmce.value = p_bar.value = '';
+        return;
+      }
+      if (document.activeElement !== p_pa) p_pa.value = fmt(pa);
+      if (document.activeElement !== p_dapa) p_dapa.value = fmt(pa / 10);
+      if (document.activeElement !== p_mmce) p_mmce.value = fmt(pa / 9.80665);
+      if (document.activeElement !== p_bar) p_bar.value = fmt(pa / 100000);
+    }
+    p_pa.addEventListener('input', () => updatePressFromPa(parseFloat(p_pa.value)));
+    p_dapa.addEventListener('input', () => updatePressFromPa(parseFloat(p_dapa.value) * 10));
+    p_mmce.addEventListener('input', () => updatePressFromPa(parseFloat(p_mmce.value) * 9.80665));
+    p_bar.addEventListener('input', () => updatePressFromPa(parseFloat(p_bar.value) * 100000));
+
+    const w_kw = document.getElementById('pow_kw');
+    const w_kcal = document.getElementById('pow_kcal');
+    const w_btu = document.getElementById('pow_btu');
+
+    w_kw.addEventListener('input', () => {
+      const v = parseFloat(w_kw.value);
+      if (isNaN(v)) { w_kcal.value = ''; w_btu.value = ''; return; }
+      w_kcal.value = fmt(v * 859.845);
+      w_btu.value = fmt(v * 3412.14);
+    });
+    w_kcal.addEventListener('input', () => {
+      const v = parseFloat(w_kcal.value);
+      if (isNaN(v)) { w_kw.value = ''; w_btu.value = ''; return; }
+      const kw = v / 859.845;
+      w_kw.value = fmt(kw);
+      w_btu.value = fmt(kw * 3412.14);
+    });
+    w_btu.addEventListener('input', () => {
+      const v = parseFloat(w_btu.value);
+      if (isNaN(v)) { w_kw.value = ''; w_kcal.value = ''; return; }
+      const kw = v / 3412.14;
+      w_kw.value = fmt(kw);
+      w_kcal.value = fmt(kw * 859.845);
+    });
+
+    document.querySelectorAll('.clear-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.dataset.clear;
+        if (group === 'flow') f_m3h.value = f_ls.value = f_cfm.value = '';
+        if (group === 'press') p_pa.value = p_dapa.value = p_mmce.value = p_bar.value = '';
+        if (group === 'pow') w_kw.value = w_kcal.value = w_btu.value = '';
+      });
+    });
+  </script>
+</body>
+</html>
